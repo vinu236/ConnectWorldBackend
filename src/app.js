@@ -12,6 +12,38 @@ const app = express();
 // enabling cors;
 app.use(cors());
 
+let connectedUser = [];
+let rooms = [];
+
+app.get("/api/room-exists/:roomId", (req, res) => {
+  const { roomId } = req.params;
+
+  const room = rooms.find((room) => room.id === roomId);
+
+  // checking if  room exists or not
+
+  if (room) {
+    // if the connected user greater than 3
+    if (connectedUser.length > 3) {
+      return res.status(200).json({
+        roomExist: true,
+        full: true,
+      });
+    } else {
+      // if the roomExist and not full
+      return res.status(200).json({
+        roomExist: true,
+        full: false,
+      });
+    }
+  } else {
+    // room not exist and not full either
+    return res.status(200).json({
+      roomExist: false,
+    });
+  }
+});
+
 // create http server;
 const server = http.createServer(app);
 
